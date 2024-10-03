@@ -6,7 +6,6 @@ import { useNavigate } from "react-router"
 import { useDispatch } from "react-redux"
 import { useState } from "react"
 import { login } from "@/services/operations/authAPI"
-// import { login } from "server/controller/Auth"
 
 export default function Login() {
 
