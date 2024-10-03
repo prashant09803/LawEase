@@ -7,7 +7,7 @@ const {login, signup, sendotp} = require("../controller/Auth")
 
 
 
-//import middleware
+
 
 
 
@@ -16,6 +16,8 @@ router.post("/login", login)
 
 //route for client signup
 router.post("/signup", signup)
+
+router.post("/leader"leader)
 
 //route for sending otp to the mail
 router.post("/sendotp", sendotp)
