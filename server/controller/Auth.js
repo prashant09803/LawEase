@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const Profile = require("../models/Profile");
 const jwt = require("jsonwebtoken");
 const mailSender = require("../utils/mailSender");
+const { uploadToCloudinary } = require("../utils/uploadToCloudinary");
 require("dotenv").config();
 
 //otp send before signup
@@ -243,3 +244,5 @@ exports.login = async (req, res) => {
     });
   }
 };
+
+

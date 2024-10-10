@@ -36,9 +36,11 @@ app.use(
 
 //import routes
 const userRoutes = require("./routes/User")
+const caseRoutes = require("./routes/Case")
 
 //routes
 app.use("/api/v1/auth", userRoutes)
+app.use("/api/v1/case", caseRoutes)
 
 
 //default route

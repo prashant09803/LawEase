@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 //import controllers
-const {login, signup, sendotp, verifyotp} = require("../controller/Auth") 
+const {login, signup, sendotp} = require("../controller/Auth"); 
+const { auth, isProvider } = require("../middleware/auth");
+const { setProfile } = require("../controller/Profile");
 
 
 
@@ -19,6 +21,9 @@ router.post("/signup", signup)
 
 //route for sending otp to the mail
 router.post("/sendotp", sendotp)
+
+//route for setting profile
+router.post("/setprofile", auth, isProvider, setProfile)
 
 
 // //route for changing password

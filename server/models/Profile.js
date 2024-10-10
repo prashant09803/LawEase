@@ -15,6 +15,9 @@ const profileSchema = new mongoose.Schema({
     experience: {
         type: Number,
     },
+    enrollmentNumber: {
+        type:String,
+    },
     age : {
         type:Number,
         min:18,

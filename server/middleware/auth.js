@@ -40,3 +40,42 @@ exports.auth = async(req,res,next) => {
     }
 
 }
+
+exports.isClient = async(req,res,next) => {
+    try {
+        if(req.user.accountType !== "Client") {
+            {
+                return res.status(401).json({
+                    success:false,
+                    message: "Case can be created only by client"
+                })
+            }
+        }
+        next()
+    }
+    catch(error) {
+        res.staus(500).json({
+            success:false,
+            message: "Role can not be verified"
+        })
+    }
+}
+
+exports.isProvider = async(req,res, next) => {
+    try{
+        if(req.user.accountType !== "Provider")
+        {
+            return res.status(401).json({
+                success:false,
+                message:"This is protected route for Provider only"
+            })
+        }
+        next()
+    }
+    catch(error){
+        res.status(500).json({
+            success:false,
+            message:"Role can not be verified"
+        })
+    }
+}
