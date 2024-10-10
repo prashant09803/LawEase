@@ -9,6 +9,9 @@ import Providers from "./pages/Providers";
 import Leaderboard from "./pages/Leaderboard";
 import Home from "./pages/Home";
 import { toast, Toaster } from 'sonner'
+import CaseCreation from "./pages/CaseCreation";
+// import CaseCreation from "./pages/1";
+// import CaseCreation2 from "./pages/0";
 
 
 
@@ -24,6 +27,8 @@ function App() {
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/create-case" element={<CaseCreation />} />
+        {/* <Route path="/create-case2" element={<CaseCreation2 />} /> */}
       </Routes>
       <Toaster richColors position="bottom-center" />
 

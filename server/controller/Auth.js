@@ -138,7 +138,13 @@ exports.signup = async (req, res) => {
       gender: null,
       contactNumber: null,
       about: null,
-      dateOfBirth: null,
+      age: null,
+      district:null,
+      taluka:null,
+      state: null,
+      university: null,
+      category: null,
+      
     });
     console.log(profileDetails);
 

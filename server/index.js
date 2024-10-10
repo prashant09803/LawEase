@@ -5,11 +5,24 @@ const cors = require("cors");
 const database = require("./config/database");
 const dotenv = require("dotenv");
 dotenv.config();
+const { cloudinaryConnect } = require("./config/cloudinary");
+const fileUpload = require("express-fileupload");
 
 const PORT = process.env.PORT || 4000;
 
 // db connection
 database.connect();
+
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp",
+  })
+);
+
+
+// //cloudinary connection
+cloudinaryConnect();
 
 //middlewares
 app.use(express.json());
