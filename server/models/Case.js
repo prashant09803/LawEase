@@ -8,7 +8,7 @@ const caseSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: ["Open", "In-Progress", "Closed"]
+        enum: ["Open", "In-Progress", "Closed", "Rejected"]
     },
     serviceProvider: {
         type: mongoose.Schema.Types.ObjectId,

@@ -18,7 +18,7 @@ exports.createCase = async(req,res) => {
 
         const doc = req.files.caseDocument
 
-        if(!description || !serviceProvider || !caseAudio) {
+        if(!description || !serviceProvider) {
             return res.status(400).json({
                 success: false,
                 message: "All fields are required"
@@ -168,3 +168,138 @@ exports.acceptCase = async(req,res) => {
     }
 }
 
+//reject case
+exports.rejectCase = async(req,res) => {
+    try {
+        //take case id
+        const {caseId} = req.body
+
+        //take userid
+        const userId = req.user.id
+
+        //if caseId missing
+        if(!caseId) {
+            return res.status(400).json({ 
+                success: false, 
+                message: "Case id is required" 
+            })
+        }
+
+        //access that case
+        const caseData = await Case.findById(caseId)
+
+        //change status of that case
+        await Case.findByIdAndUpdate(caseId, {
+            status: "Rejected"
+        })
+
+        //remove from pendingCaseRequest of user
+        await User.findByIdAndUpdate(userId, {
+            $pull: {
+                pendingCaseRequest: caseId
+            }
+        })
+
+        return res.status(200).json({ 
+            success: true, 
+            message: "Case rejected successfully" 
+        })
+    }
+    catch(error) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Error while rejecting case" ,
+            error : error
+        })
+    }
+}
+
+//is case created 
+exports.isCaseCreated = async(req,res) => {
+    try {
+        const email = req.query.email        
+        const user = await User.findOne({ email: email }).populate("cases").populate("pendingCaseRequest")
+        console.log("email: ", email)
+        //if any case is present in pending or cases return it 
+        if (user.pendingCaseRequest.length > 0) {
+            return res.status(200).json({ 
+                success: true, 
+                data: user.pendingCaseRequest,
+                message: "Pending case requests fetched successfully"
+            })
+        }
+        else if (user.cases.length > 0) {
+            return res.status(200).json({ 
+                success: true, 
+                data: user.cases,
+                message: "Cases fetched successfully"
+            })
+        }
+        else {
+            return res.status(200).json({ 
+                success: true, 
+                data: [],
+                message: "Cases fetched successfully"
+            })
+        }
+    }
+    catch(error) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Error while fetching cases" 
+        })
+    }
+}
+
+//get all cases (for client and provider)
+exports.getAllCases = async(req,res) => {
+    try {
+        //get user id
+        const userId = req.user.id
+        console.log("user: ", userId)
+
+        //get user data
+        const userData = await User.findById(userId).populate('cases');
+
+        //get all cases of that user
+        const cases = userData.cases;
+
+        return res.status(200).json({ 
+            success: true, 
+            data: cases,
+            message: "Cases fetched successfully" 
+        })
+    }
+    catch(error) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Error while fetching cases" 
+        })
+    }
+}
+
+//get all pending cases
+exports.getAllPendingCases = async(req,res) => {
+    try {
+        //get user id
+        const userId = req.user.id
+
+        //get user data
+        const userData = await User.findById(userId).populate('pendingCaseRequest')
+
+        //get all cases of that user
+        const pendingCases = userData.pendingCaseRequest;
+
+        return res.status(200).json({ 
+            success: true, 
+            data: pendingCases,
+            message: "Cases fetched successfully" 
+        })
+    }
+    catch(error) {
+        return res.status(400).json({ 
+            success: false, 
+            message: "Error while fetching cases" 
+        })
+    }
+}

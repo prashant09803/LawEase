@@ -2,9 +2,17 @@ import { setLoading, setToken, } from "@/slices/authSlice";
 import { setUser } from "@/slices/profileSlice";
 import { toast } from 'sonner'
 import { endpoints } from "../apis"
+import { caseEndpoints } from "../apis";
 import { apiConnector } from "../apiConnector";
+import { ArrowBigDownIcon } from "lucide-react";
 
 const { SENDOTP_API, SIGNUP_API, LOGIN_API } = endpoints;
+const {
+  IS_CASE_CREATED,
+  CREATE_CASE_API,
+  ACCEPT_CASE_API,
+} = caseEndpoints;
+
 
 
 
@@ -71,7 +79,16 @@ export function login(email, password, navigate) {
         localStorage.setItem("user", JSON.stringify(response.data.user));
   
         // Navigate to the user's profile
-        navigate("/dashboard");
+        //if case already created then navigate to dashboard else navigate to create case
+        const cases = await apiConnector("GET", IS_CASE_CREATED, null, null, { email});    
+    
+        if(cases.data.data.length > 0) {
+          navigate("/dashboard")
+        }
+        else {
+          navigate('/create-case')
+        }
+
       } catch (error) {
         console.log(LOGIN_API);
         console.log("LOGIN API ERROR............", error);
@@ -79,9 +96,22 @@ export function login(email, password, navigate) {
         // Dismiss loading toast and show error
         toast.dismiss(toastId);
         toast.error(error?.response?.data?.message || "Login failed!"); // Handle undefined error messages
-      } finally {
-        dispatch(setLoading(false)); // Ensure loading state is set to false
-      }
+      } 
+      
+      dispatch(setLoading(false)); // Ensure loading state is set to false
+      
     };
 }
 
+export function logout(navigate) {
+  return (dispatch) => {
+    dispatch(setToken(null))
+    dispatch(setUser(null))
+
+    localStorage.removeItem("token")
+    localStorage.removeItem("user")
+
+    toast.success("Logged Out")
+    navigate("/")
+  }
+}

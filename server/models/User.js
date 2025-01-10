@@ -49,10 +49,10 @@ const userSchema = new mongoose.Schema ({
             ref: "Case"
         }
     ],
-    cases: {
+    cases: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Case"
-    }
+    }]
     ,
     payments: [
         {
